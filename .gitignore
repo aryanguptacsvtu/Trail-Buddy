@@ -1,0 +1,5 @@
+.venv/
+models/
+journals/
+__pycache__/
+.env
