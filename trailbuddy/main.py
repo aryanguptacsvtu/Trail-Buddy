@@ -1,15 +1,15 @@
 import argparse, datetime, os, time
 from . import llm, router
-
+from .report import write_html
 
 def main():
-
+   
     ap = argparse.ArgumentParser()
     ap.add_argument("request", help='e.g. "2 hours, moderate fitness, scenic"')
     ap.add_argument("--max-min", type=int, help="time budget in minutes")
     ap.add_argument("--text", action="store_true", help="type instead of using mic/speakers")
     a = ap.parse_args()
-
+   
     if a.text:
         speak, listen = (lambda t: print(f"TrailBuddy: {t}")), (lambda: input("you> "))
     else:
@@ -18,12 +18,12 @@ def main():
     cands = router.candidates(max_min=a.max_min)
     if not cands:
         raise SystemExit("Put some .gpx files in routes/ first.")
-    
+   
     p = llm.plan(a.request, cands)
     route = cands[p["chosen"]]
     plan_text = f"{route['name']}: {route['km']} km, {route['gain_m']} m climb, ~{route['est_min']} min. {p['why']}"
     missions, done = p["missions"], set()
-
+   
     speak("Plan ready. " + plan_text)
     print("\nMissions:", *[f"  {i}. {m}" for i, m in enumerate(missions)], sep="\n")
     print("\nSafety:", *[f"  - {s}" for s in p["safety"]], sep="\n")
@@ -31,7 +31,7 @@ def main():
 
     start, log, history = time.time(), [], []
     screen_on_since, screen_secs, unlocks = None, 0.0, 0
-
+   
     while True:
         cmd = input("> ").strip().lower()
         if cmd == "q":
@@ -48,30 +48,37 @@ def main():
         said = listen()
         if not said:
             continue
-        
+      
         md = llm.classify(missions, done, said)
-        
+      
         if md is not None:
             done.add(md)
-        
+       
         r = llm.reply(plan_text, missions, done, history, said, md)
         history += [{"role": "user", "content": said}, {"role": "assistant", "content": r}]
-        log.append({"min": round((time.time() - start) / 60, 1), "hiker_said": said,
-                    "mission_completed": missions[md] if md is not None else None})
+        if md is not None or "?" not in said:   # questions aren't journal material
+            entry = {"min": round((time.time() - start) / 60, 1), "hiker_said": said}
+            if md is not None:
+                entry["mission_completed"] = missions[md]
+            log.append(entry)
         speak(r)
+
+        # log.append({"min": round((time.time() - start) / 60, 1), "hiker_said": said,
+        #             "mission_completed": missions[md] if md is not None else None})
 
     if screen_on_since:
         screen_secs += time.time() - screen_on_since
-
+    
     total = time.time() - start
     stats = {"date": str(datetime.date.today()), "outing_min": round(total / 60),
              "screen_s": round(screen_secs), "unlocks": unlocks,
              "missions_done": f"{len(done)}/{len(missions)}", "route": route["name"],
              "route_km": route["km"]}
     
-    text = llm.journal(log, stats)
+    # text = llm.journal(log, stats)
+    text = " ".join(llm.journal(log, stats).split())   # collapse stray newlines/indents
     os.makedirs("journals", exist_ok=True)
-
+    
     path = f"journals/{datetime.datetime.now():%Y-%m-%d_%H%M}-{route['name']}.md"
     
     with open(path, "w", encoding="utf-8") as f:
@@ -79,7 +86,7 @@ def main():
                 f"- Outing: {stats['outing_min']} min\n"
                 f"- Screen time: {stats['screen_s'] // 60} min {stats['screen_s'] % 60} s ({unlocks} unlocks)\n"
                 f"- Missions: {stats['missions_done']}\n")
-    
+    write_html(path.replace(".md", ".html"), route["name"], text, stats)
     speak("Journal saved.")
     print("Saved", path)
 
