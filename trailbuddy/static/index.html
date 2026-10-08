@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>TrailBuddy — Touch Grass</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+  <header class="top">
+    <div class="wrap">
+      <div class="brand">🌿 TrailBuddy</div>
+      <div class="tag">Open-source AI • Touch Grass</div>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <!-- 1. LANDING -->
+    <section id="v-landing" class="hero">
+      <div>
+        <div class="eyebrow">🌍 Outdoor AI companion</div>
+        <h1 class="huge"><span>GO</span><span class="g">OUTSIDE.</span><span>AI WILL WAIT.</span></h1>
+        <p class="lead">TrailBuddy is an offline, AI-powered outdoor companion that picks a real trail, gives you things
+          to notice, and makes your screen the shortest part of the experience.</p>
+        <button class="btn lg" id="startBtn">Start adventure →</button>
+        <div class="state" id="health"></div>
+      </div>
+      <div class="mission-hero">
+        <div class="eyebrow">Today's mission</div>
+        <div class="emoji">🌳</div>
+        <div>
+          <h2>Find something you've never noticed before.</h2>
+          <p>20 minutes. No scrolling. Just explore.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. PLAN -->
+    <section id="v-plan" class="page" hidden>
+      <div class="eyebrow">Step 1 · Plan</div>
+      <h2 class="title">Where to today?</h2>
+      <div class="card" id="planOut">
+        <div class="eyebrow">Choose your trail</div>
+        <div class="routes" id="routeCards"></div>
+        <div class="state" id="routeState"></div>
+        <div class="err" id="planErr" hidden></div>
+        <div id="planDetail" style="margin-top:24px" hidden>
+          <div class="eyebrow">Your trail</div>
+          <h2 class="title" id="pRoute" style="margin-bottom:0"></h2>
+          <div class="chips" id="pChips"></div>
+          <p id="pWhy" class="muted"></p>
+          <div class="cols">
+            <div>
+              <h3>Missions</h3>
+              <ol class="m" id="pMissions"></ol>
+            </div>
+            <div>
+              <h3>Safety checklist</h3>
+              <ul class="s" id="pSafety"></ul>
+            </div>
+          </div>
+          <div style="margin-top:24px"><button class="btn lg" id="beginBtn">Begin Touch Grass Mode →</button></div>
+        </div>
+        <div class="row" style="margin-top:20px"><button class="btn ghost" id="planBack">Back</button></div>
+      </div>
+    </section>
+
+    <!-- 3. SESSION -->
+    <section id="v-session" class="page" hidden>
+      <div class="row" style="justify-content:space-between;align-items:flex-start">
+        <div>
+          <div class="eyebrow">Your adventure</div>
+          <h2 class="title" style="margin-bottom:6px">Touch Grass Mode 🌿</h2>
+          <div class="muted" id="sRoute"></div>
+        </div>
+        <button class="btn" id="endBtn">End session</button>
+      </div>
+      <div class="err" id="sErr" hidden></div>
+      <div class="grid" style="margin-top:20px">
+        <div class="card span2">
+          <h3>Today's Mission</h3>
+          <div class="pale">
+            <div class="eyebrow" id="mNum"></div>
+            <h4 id="mText"></h4>
+            <p id="mSub">Look around you and notice it. Then tell TrailBuddy, or tap complete.</p>
+            <button class="btn" id="doneBtn">✓ Complete mission</button>
+            <div class="dots" id="mDots"></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Outside Time</h3>
+          <div class="big" id="clock">00:00</div>
+          <div class="row"><button class="btn sm" id="pauseBtn">Pause</button><button class="btn sm"
+              id="resetBtn">Reset</button></div>
+          <div class="state"><button class="btn sm ghost" id="screenBtn">Screen: off</button>
+            <div id="screenInfo" style="margin-top:6px">Tap when you unlock your screen to track it.</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Adventure Stats</h3>
+          <div class="tiles">
+            <div class="tile"><b id="stM">0</b><span>Missions</span></div>
+            <div class="tile"><b id="stD">0</b><span>Discoveries</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>🔎 AI Discovery Scanner</h3>
+          <div class="drop">
+            <div id="dropBody">
+              <div class="ico">📷</div>
+              <div>Photograph something interesting.</div>
+            </div>
+            <div style="margin-top:12px"><button class="btn sm" id="photoBtn">Select photo</button></div>
+            <input type="file" id="photoIn" accept="image/*" hidden>
+          </div>
+          <div class="result" id="scanOut" hidden></div>
+        </div>
+        <div class="card">
+          <h3>📍 Your Location</h3>
+          <div class="muted" id="locTxt" style="font-size:14px;margin-bottom:14px">Location has not been requested yet.
+          </div>
+          <button class="btn" id="locBtn">Get location</button>
+          <div class="state">Stays in your browser. Never sent anywhere.</div>
+        </div>
+
+        <div class="card score">
+          <h3>Touch Grass Score</h3>
+          <div class="big" id="score">0</div>
+          <p id="scoreMsg">Warming up.</p>
+        </div>
+        <div class="card span2">
+          <h3>💬 Ask TrailBuddy</h3>
+          <div class="chat" id="chat">
+            <div class="msg sys">Ask a question, or tell me what you spotted. I'll tick off missions for you.</div>
+          </div>
+          <div class="ask"><input type="text" id="said" placeholder="e.g. I found a pinecone"><button class="btn"
+              id="sendBtn">Send</button></div>
+        </div>
+
+        <div class="card span3">
+          <div class="cols">
+            <div>
+              <h3>All missions</h3>
+              <ol class="m" id="allM"></ol>
+            </div>
+            <div>
+              <h3>Safety checklist</h3>
+              <ul class="s" id="allS"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. DONE -->
+    <section id="v-done" class="page" hidden>
+      <div class="eyebrow">Outing complete</div>
+      <h2 class="title" id="dTitle">Nice work.</h2>
+      <div class="card" style="max-width:760px">
+        <div id="dLoad" class="state">Writing your journal with the local model… this can take a minute.</div>
+        <div class="err" id="dErr" hidden></div>
+        <div id="dBody" hidden>
+          <div class="tiles" id="dTiles"></div>
+          <div class="journal" id="dText"></div>
+          <div class="row"><a class="btn" id="dLink" target="_blank" rel="noopener" style="text-decoration:none">Open
+              saved report</a>
+            <button class="btn ghost" id="newBtn">New outing</button>
+          </div>
+        </div>
+        <div class="row" id="dRetry" hidden><button class="btn" id="retryBtn">Try again</button><button
+            class="btn ghost" id="backBtn">Back to session</button></div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+
+</html>
