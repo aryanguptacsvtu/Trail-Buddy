@@ -9,6 +9,13 @@ You can use it two ways:
 
 Everything runs on your machine. The browser talks to a small local server, and that server talks to Ollama.
 
+<div style="overflow-x: auto; white-space: nowrap;">
+
+<img src="images/image1.png" width="500"  height='318' style="display: inline-block; margin-right: 10px;">
+<img src="images/image2.png" width="500" height='318' style="display: inline-block; margin-right: 10px;">
+<img src="images/image3.png" width="500"  height='350' style="display: inline-block; margin-right: 10px;">
+</div>
+
 ## What you need
 
 - Python 3.10 or newer
