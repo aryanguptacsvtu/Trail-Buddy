@@ -11,8 +11,8 @@ Everything runs on your machine. The browser talks to a small local server, and 
 
 <p align="center">
   <img src="images/image1.png" width="48%" height='318'>
-  <img src="images/image2.png" width="50%" height='260'>
-  <img src="images/image3.png" width="60%" height='340'>
+  <img src="images/image2.png" width="50%" height='255'>
+  <img src="images/image3.png" width="62%" height='345'>
 </p>
 
 
