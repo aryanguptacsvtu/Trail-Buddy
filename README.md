@@ -82,11 +82,10 @@ Keep `--host` at its default. The server has no login, so setting it to `0.0.0.0
 ```mermaid
 flowchart LR
     A[Start<br/>check Ollama] --> B[Choose a trail<br/>browse GPX metadata]
-    B --> C[Review cached plan<br/>missions + safety checklist]
+    B --> C[Review plan<br/>missions + safety checklist]
     C --> D[Touch Grass Mode]
     D --> E["Activity: missions · outside time<br/>screen taps · photo scanner · location"]
     E --> F[Touch Grass Score]
-    D -. refresh .-> D
     D --> G[End session]
     G --> H[First-person journal<br/>Markdown + HTML in journals/]
     E -.-> I[Location stays<br/>in the browser]
@@ -103,6 +102,7 @@ flowchart LR
     class F,G,H outcome
     class I privacy
 ```
+During an outing you can complete missions with the button or by telling the chat what you spotted, and the model ticks them off for you. If you refresh the page, the session is restored from the browser tab and is cleared when you finish. When you end the session, the page links to your journal report.
 
 ## Run from the command line
 
@@ -124,7 +124,7 @@ During an outing:
 - Press **s** to toggle screen-time tracking.
 - Press **q** to finish and save the journal.
 
-Journals are written to `journals/` as Markdown files.
+Journals are written to `journals/` as a Markdown file plus an HTML report.
 
 ## Configuration
 
@@ -156,6 +156,10 @@ TB_MODEL=qwen3:4b python serve.py
 TRAILBUDDY/
 ├── run.py                  command-line entry point
 ├── serve.py                web UI entry point
+├── requirements.txt        Python dependencies
+├── LICENSE
+├── .gitignore
+├── images/                 README screenshots
 ├── routes/                 your .gpx trails
 ├── journals/               saved journals (created on first outing)
 ├── models/                 Piper voice files
